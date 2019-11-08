@@ -1,0 +1,41 @@
+Group:
+
+Member:
+Pham Hoang Minh -s1024376
+Sebastian France -s??????
+
+Report - Operating system
+
+1- Uppaal model explanation: 
+It is a model of the solution to Readers-writers problem, while considering Starvation as a sub problem. We do not implement writer-prioritize here due to the fact that it will change the model significantly, which should be a separate model.
+The model consists of 4 processes (3 Readers and 1 Writer), an int readers (count the readers in the room), 3 semaphores (mutex, roomEmpty and turnstile)
+
+-- Just writer-reader solution
+The writer solution just Wait - critical section - signal, so when the room is empty, the writer then enter and finishes its critical section without the interference of other processses.
+The reader solution is: When the first reader arrives(added in the mutex queue), it will have to wait for roomEmpty. After the first reader has entered the room, no Writer processes can enter the room anymore. Subsequent readers can enter freely because the condition readers == 1 is no longer valid. The last reader when finishes (when readers == 0) will unlock the room(signal the roomEmpty).
+-- Stavation considered
+The writer solution now will include the turnstile sophoremore to block a writer if it arrives while there are readers in the room and then added to the turnstile queue. the new readers now will be blocked from entering when the writer is queued. when the last reader in the room leaves, it signals roomEmpty to unblock the waiting writer. The writer then can enters its critical section. After that it signal turnstile again to unblock the queue. At the end it will signal roomEmpty as usual.
+The Reader solution will wait for turnstile at the start and then signal turnstile when the queue is unblocked.
+
+2- Simplifying assumptions: 4 processes with 3 readers and 1 writer
+3- This is not yet a good model, there are still some part that can be simplified.
+4- 
+Queries:
+-D.cs imply not (A.cs || B.cs || C.cs): when a writer is in critical section, no other processes can be in its critical section.
+-(not Mutex.overflow) and (not roomEmpty.overflow) and( not turnstile.overflow): queue not overflow
+-A.cs imply not (B.cs || C.cs ): when a reader is in critical section, no other readers can be in its critical section (this is intended to be prove as wrong)
+-not deadlock: there is no deadlock
+
+5- Properites to prove: deadlock free.
+queue overflow prevention. 
+if a writer is in critical section, no other can access the room.  
+readers can freely enter the room when there is another reader in the room.
+starvation free. (which we can not find a suitable query)
+6- Uppaal is albe to answer all my queries
+7- scalability is not an issue, we think the model can still be extended.
+8- state explosion?
+9- We were not able to prove (create suitable queries) the Downey properties
+10- starvation, ...
+11- we learned about the techniques to use Uppaal and a better understanding of deadlock problems.
+
+
